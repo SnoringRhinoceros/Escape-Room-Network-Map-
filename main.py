@@ -26,6 +26,7 @@ RED = (255, 0, 0)
 
 # Fonts
 font = pygame.font.SysFont(None, 36)
+unlocked_font = pygame.font.SysFont(None, 72)
 
 
 class Box:
@@ -105,7 +106,7 @@ def main():
     def draw_screen():
         if unlocked:
             screen.fill(BLACK)
-            unlocked_text_surface = font.render("Unlocked! Your code is: " + code, True, GREEN)
+            unlocked_text_surface = unlocked_font.render("Unlocked! Your code is: " + code, True, GREEN)
             screen.blit(unlocked_text_surface, (screen_width // 2 - unlocked_text_surface.get_width() // 2, screen_height // 2 - unlocked_text_surface.get_height() // 2))
         else:
             screen.fill(WHITE)
