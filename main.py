@@ -73,24 +73,24 @@ class DraggableText:
 def main():
     texts = ["Internet", "Internet Edge", "Security Edge", "Network Core", "Application Edge", "Wireless Network", "User Device 2", "User Device 1"]
     
+    # Relative positions and sizes of the boxes based on screen dimensions
     boxes = [
-        Box(texts[0], pygame.Rect((479, 20), (200, 40))),
-        Box(texts[1], pygame.Rect((619, 210), (200, 40))),
-        Box(texts[2], pygame.Rect((275, 370), (200, 40))),
-        Box(texts[3], pygame.Rect((622, 359), (200, 40))),
-        Box(texts[4], pygame.Rect((12, 610), (200, 40))),
-        Box(texts[5], pygame.Rect((460, 630), (200, 40))),
-        Box(texts[6], pygame.Rect((766, 792), (200, 40))),
-        Box(texts[7], pygame.Rect((507, 967), (200, 40)))
+        Box(texts[0], pygame.Rect((screen_width * 0.479, screen_height * 0.02), (screen_width * 0.2, screen_height * 0.04))),
+        Box(texts[1], pygame.Rect((screen_width * 0.619, screen_height * 0.21), (screen_width * 0.2, screen_height * 0.04))),
+        Box(texts[2], pygame.Rect((screen_width * 0.275, screen_height * 0.37), (screen_width * 0.2, screen_height * 0.04))),
+        Box(texts[3], pygame.Rect((screen_width * 0.622, screen_height * 0.359), (screen_width * 0.2, screen_height * 0.04))),
+        Box(texts[4], pygame.Rect((screen_width * 0.012, screen_height * 0.61), (screen_width * 0.2, screen_height * 0.04))),
+        Box(texts[5], pygame.Rect((screen_width * 0.46, screen_height * 0.63), (screen_width * 0.2, screen_height * 0.04))),
+        Box(texts[6], pygame.Rect((screen_width * 0.766, screen_height * 0.792), (screen_width * 0.2, screen_height * 0.04))),
+        Box(texts[7], pygame.Rect((screen_width * 0.507, screen_height * 0.967), (screen_width * 0.2, screen_height * 0.04)))
     ]
     
     random.shuffle(texts)
-    draggable_texts = [DraggableText(text, (50, 50 + i * 70)) for i, text in enumerate(texts)]
+    draggable_texts = [DraggableText(text, (screen_width * 0.05, screen_height * (0.05 + i * 0.07))) for i, text in enumerate(texts)]
 
-    # Submit button
-    submit_button_rect = pygame.Rect(50, screen_height - 70, 200, 50)
+    # Relative position of the submit button based on screen dimensions
+    submit_button_rect = pygame.Rect(screen_width * 0.05, screen_height * 0.93, screen_width * 0.2, screen_height * 0.05)
     last_submit_time = 0
-
 
     dragging_text = None
     dragging_offset = (0, 0)
@@ -106,8 +106,8 @@ def main():
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
-                current_time = pygame.time.get_ticks()+submit_delay
-                if submit_button_rect.collidepoint(pos) and current_time-last_submit_time >= submit_delay:
+                current_time = pygame.time.get_ticks() + submit_delay
+                if submit_button_rect.collidepoint(pos) and current_time - last_submit_time >= submit_delay:
                     for box in boxes:
                         if box.assigned_text == box.text:
                             box.correct = True
@@ -145,9 +145,6 @@ def main():
                 new_pos = (pos[0] + dragging_offset[0], pos[1] + dragging_offset[1])
                 dragging_text.update_position(new_pos)
 
-
-        pos = pygame.mouse.get_pos()
-        # print(pos)
         # Draw boxes
         for box in boxes:
             box.draw(screen)
@@ -163,11 +160,9 @@ def main():
         submit_text_surface = font.render("Submit", True, BLACK)
         screen.blit(submit_text_surface, (submit_button_rect.x + 10, submit_button_rect.y + 10))
 
-
         # Draw the time left
-        font.render("font", True, BLACK).get_rect(topleft=pos)
-        text_surface = font.render("Wait " + str(max(((submit_delay//1000)-(pygame.time.get_ticks()-last_submit_time+submit_delay) // 1000), 0)) + " sec", True, BLACK)
-        screen.blit(text_surface, (252, 942))
+        text_surface = font.render("Wait " + str(max(((submit_delay // 1000) - (pygame.time.get_ticks() - last_submit_time + submit_delay) // 1000), 0)) + " sec", True, BLACK)
+        screen.blit(text_surface, (screen_width * 0.252, screen_height * 0.942))
 
         pygame.display.update()
 
