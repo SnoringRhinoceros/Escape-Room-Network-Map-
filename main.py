@@ -94,6 +94,7 @@ def main():
 
     dragging_text = None
     dragging_offset = (0, 0)
+    unlocked = False
 
     running = True
     while running:
@@ -108,13 +109,18 @@ def main():
                 pos = pygame.mouse.get_pos()
                 current_time = pygame.time.get_ticks() + submit_delay
                 if submit_button_rect.collidepoint(pos) and current_time - last_submit_time >= submit_delay:
+                    all_correct = True
                     for box in boxes:
                         if box.assigned_text == box.text:
                             box.correct = True
                         else:
                             box.correct = False
-                            
+                            all_correct = False
                     last_submit_time = current_time
+
+                    if all_correct:
+                        unlocked = True
+
                 else:
                     for draggable in draggable_texts:
                         if draggable.rect.collidepoint(pos):
@@ -145,24 +151,29 @@ def main():
                 new_pos = (pos[0] + dragging_offset[0], pos[1] + dragging_offset[1])
                 dragging_text.update_position(new_pos)
 
-        # Draw boxes
-        for box in boxes:
-            box.draw(screen)
+        if unlocked:
+            screen.fill(BLACK)
+            unlocked_text_surface = font.render("Unlocked!", True, GREEN)
+            screen.blit(unlocked_text_surface, (screen_width // 2 - unlocked_text_surface.get_width() // 2, screen_height // 2 - unlocked_text_surface.get_height() // 2))
+        else:
+            # Draw boxes
+            for box in boxes:
+                box.draw(screen)
 
-        # Draw draggable texts
-        for draggable in draggable_texts:
-            if not draggable.assigned_box:
-                draggable.draw(screen)
+            # Draw draggable texts
+            for draggable in draggable_texts:
+                if not draggable.assigned_box:
+                    draggable.draw(screen)
 
-        # Draw the submit button
-        pygame.draw.rect(screen, BORDER_COLOR, submit_button_rect, 3)
-        pygame.draw.rect(screen, GRAY, submit_button_rect)
-        submit_text_surface = font.render("Submit", True, BLACK)
-        screen.blit(submit_text_surface, (submit_button_rect.x + 10, submit_button_rect.y + 10))
+            # Draw the submit button
+            pygame.draw.rect(screen, BORDER_COLOR, submit_button_rect, 3)
+            pygame.draw.rect(screen, GRAY, submit_button_rect)
+            submit_text_surface = font.render("Submit", True, BLACK)
+            screen.blit(submit_text_surface, (submit_button_rect.x + 10, submit_button_rect.y + 10))
 
-        # Draw the time left
-        text_surface = font.render("Wait " + str(max(((submit_delay // 1000) - (pygame.time.get_ticks() - last_submit_time + submit_delay) // 1000), 0)) + " sec", True, BLACK)
-        screen.blit(text_surface, (screen_width * 0.252, screen_height * 0.942))
+            # Draw the time left
+            text_surface = font.render("Wait " + str(max(((submit_delay // 1000) - (pygame.time.get_ticks() - last_submit_time + submit_delay) // 1000), 0)) + " sec", True, BLACK)
+            screen.blit(text_surface, (screen_width * 0.252, screen_height * 0.942))
 
         pygame.display.update()
 
