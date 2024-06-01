@@ -25,9 +25,6 @@ RED = (255, 0, 0)
 # Fonts
 font = pygame.font.SysFont(None, 36)
 
-# Load background image
-background_image = pygame.image.load('image.png')
-background_image = pygame.transform.scale(background_image, (screen_width, screen_height))
 
 class Box:
     def __init__(self, text, rect):
@@ -50,11 +47,11 @@ class DraggableText:
     def __init__(self, text, pos):
         self.text = text
         self.pos = pos
-        self.rect = font.render(text, True, BLACK).get_rect(topleft=pos)
+        self.rect = font.render(text, True, WHITE).get_rect(topleft=pos)
         self.assigned_box = None
 
     def draw(self, surface):
-        text_surface = font.render(self.text, True, BLACK)
+        text_surface = font.render(self.text, True, WHITE)
         surface.blit(text_surface, self.pos)
 
     def update_position(self, new_pos):
@@ -65,18 +62,21 @@ class DraggableText:
         self.rect.topleft = self.pos
 
 def main():
-    texts = ["Internet", "Internet Edge", "Security Edge", "Network Core", "Application Edge", "Wireless Network", "User Device 2", "User Device 1"]
+    texts = ["Internet", "Internet Edge", "Security Edge", "Network Core", "Application Edge", "Wireless Network", "Printer", "Tablet"]
     
+    # Load images
+    imgs = [pygame.image.load(x + ".png") for x in texts]
+
     # Relative positions and sizes of the boxes based on screen dimensions
     boxes = [
-        Box(texts[0], pygame.Rect((screen_width * 0.479, screen_height * 0.02), (screen_width * 0.2, screen_height * 0.04))),
-        Box(texts[1], pygame.Rect((screen_width * 0.619, screen_height * 0.21), (screen_width * 0.2, screen_height * 0.04))),
-        Box(texts[2], pygame.Rect((screen_width * 0.275, screen_height * 0.37), (screen_width * 0.2, screen_height * 0.04))),
-        Box(texts[3], pygame.Rect((screen_width * 0.622, screen_height * 0.359), (screen_width * 0.2, screen_height * 0.04))),
-        Box(texts[4], pygame.Rect((screen_width * 0.012, screen_height * 0.61), (screen_width * 0.2, screen_height * 0.04))),
-        Box(texts[5], pygame.Rect((screen_width * 0.46, screen_height * 0.63), (screen_width * 0.2, screen_height * 0.04))),
-        Box(texts[6], pygame.Rect((screen_width * 0.766, screen_height * 0.792), (screen_width * 0.2, screen_height * 0.04))),
-        Box(texts[7], pygame.Rect((screen_width * 0.507, screen_height * 0.967), (screen_width * 0.2, screen_height * 0.04)))
+        Box(texts[0], pygame.Rect((500, 29), (screen_width * 0.22, screen_height * 0.04))),
+        Box(texts[1], pygame.Rect((480, 221), (screen_width * 0.22, screen_height * 0.04))),
+        Box(texts[2], pygame.Rect((screen_width * 0.275, screen_height * 0.37), (screen_width * 0.22, screen_height * 0.04))),
+        Box(texts[3], pygame.Rect((screen_width * 0.622, screen_height * 0.359), (screen_width * 0.22, screen_height * 0.04))),
+        Box(texts[4], pygame.Rect((screen_width * 0.012, screen_height * 0.61), (screen_width * 0.22, screen_height * 0.04))),
+        Box(texts[5], pygame.Rect((screen_width * 0.46, screen_height * 0.63), (screen_width * 0.22, screen_height * 0.04))),
+        Box(texts[6], pygame.Rect((808, 637), (screen_width * 0.22, screen_height * 0.04))),
+        Box(texts[7], pygame.Rect((screen_width * 0.507, screen_height * 0.967), (screen_width * 0.22, screen_height * 0.04)))
     ]
     
     random.shuffle(texts)
@@ -101,12 +101,21 @@ def main():
         return all_correct
 
     def draw_screen():
-        screen.blit(background_image, (0, 0))  # Draw the background image
         if unlocked:
             screen.fill(BLACK)
             unlocked_text_surface = font.render("Unlocked!", True, GREEN)
             screen.blit(unlocked_text_surface, (screen_width // 2 - unlocked_text_surface.get_width() // 2, screen_height // 2 - unlocked_text_surface.get_height() // 2))
         else:
+            screen.fill(BLACK)
+            screen.blit(imgs[0], (524, 8))
+            screen.blit(imgs[1], (519, 138))
+            screen.blit(imgs[2], (353, 316))
+            screen.blit(imgs[3], (718, 310))
+            screen.blit(imgs[4], (11, 504))
+            screen.blit(imgs[5], (520, 504))
+            screen.blit(imgs[6], (820, 504))
+            screen.blit(imgs[7], (523, 661))
+            
             for box in boxes:
                 box.draw(screen)
             for draggable in draggable_texts:
@@ -120,13 +129,14 @@ def main():
             # Calculate and draw the time left
             current_time = pygame.time.get_ticks()
             time_left = max((submit_delay - (current_time - last_submit_time)) // 1000, 0)
-            text_surface = font.render(f"Wait {time_left} sec", True, BLACK)
+            text_surface = font.render(f"Wait {time_left} sec", True, WHITE)
             screen.blit(text_surface, (screen_width * 0.252, screen_height * 0.942))
         
         pygame.display.update()
 
     running = True
     while running:
+        # print(pygame.mouse.get_pos())
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
