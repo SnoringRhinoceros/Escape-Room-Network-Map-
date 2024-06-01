@@ -47,11 +47,11 @@ class DraggableText:
     def __init__(self, text, pos):
         self.text = text
         self.pos = pos
-        self.rect = font.render(text, True, WHITE).get_rect(topleft=pos)
+        self.rect = font.render(text, True, BLACK).get_rect(topleft=pos)
         self.assigned_box = None
 
     def draw(self, surface):
-        text_surface = font.render(self.text, True, WHITE)
+        text_surface = font.render(self.text, True, BLACK)
         surface.blit(text_surface, self.pos)
 
     def update_position(self, new_pos):
@@ -106,7 +106,7 @@ def main():
             unlocked_text_surface = font.render("Unlocked!", True, GREEN)
             screen.blit(unlocked_text_surface, (screen_width // 2 - unlocked_text_surface.get_width() // 2, screen_height // 2 - unlocked_text_surface.get_height() // 2))
         else:
-            screen.fill(BLACK)
+            screen.fill(WHITE)
             screen.blit(imgs[0], (524, 8))
             screen.blit(imgs[1], (519, 138))
             screen.blit(imgs[2], (353, 316))
@@ -129,7 +129,7 @@ def main():
             # Calculate and draw the time left
             current_time = pygame.time.get_ticks()
             time_left = max((submit_delay - (current_time - last_submit_time)) // 1000, 0)
-            text_surface = font.render(f"Wait {time_left} sec", True, WHITE)
+            text_surface = font.render(f"Wait {time_left} sec", True, BLACK)
             screen.blit(text_surface, (screen_width * 0.252, screen_height * 0.942))
         
         pygame.display.update()
