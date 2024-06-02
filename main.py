@@ -8,6 +8,7 @@ pygame.init()
 # Submit delay
 submit_delay = 10000  # milliseconds
 code = "1345"
+imgPath = ""
 
 
 # Screen dimensions
@@ -68,7 +69,7 @@ def main():
     texts = ["Internet", "Internet Edge", "Security Edge", "Network Core", "Application Edge", "Wireless Network", "Printer", "Tablet"]
     
     # Load images
-    imgs = [pygame.image.load(x + ".png") for x in texts]
+    imgs = [pygame.image.load(imgPath + x + ".png") for x in texts]
 
     # Relative positions and sizes of the boxes based on screen dimensions
     boxes = [
